@@ -59,7 +59,20 @@ const logInController =async (req,res)=>{
         return res.status(500).json({message:'Internal server error!',error})
     }
 }
+
+// logOut controller 
+const logOutController = async (req,res)=>{
+    try {
+        res.clearCookie('token')
+        return res.status(200).json({message:'logOut successfully'})
+    } catch (error) {
+        console.log(error);
+        
+        return res.status(500).json({message:'Internal server error'})
+    }
+}
 module.exports={
     singUpController,
-    logInController
+    logInController,
+    logOutController
 }
