@@ -1,3 +1,4 @@
+const generateToken = require("../../config/token.js")
 const User = require("../../model/User")
 const bcrypt = require('bcryptjs')
 // signUp controller 
@@ -21,6 +22,13 @@ const singUpController= async (req,res)=>{
             password:hashed
         })
         await user.save()
+        const token = await generateToken(user._id)
+        res.cookie("token",token,{
+            httpOnly:true,
+            maxAge:7 * 24 * 60 * 60 * 1000,
+            sameSite:'strict',
+            secure:process.env.NODE_ENVIROMENT === 'production'
+        })
         .then(()=>{
             return res.status(201).json({message:'user created successfully'})
         }).catch(err=>{
