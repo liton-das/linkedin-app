@@ -2,7 +2,6 @@ import axios from 'axios'
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { addUserInfo } from '../redux/features/userSlice'
-// http://localhost:4000/api/user/currentuser
 const Home = () => {
   const userInfo = useSelector((state)=>state.users)
   console.log('isdata',userInfo.length);

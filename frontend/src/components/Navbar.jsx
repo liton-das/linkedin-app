@@ -11,11 +11,13 @@ import notify from '../assets/notify.svg'
 import business from '../assets/business.svg'
 import primium from '../assets/primium.svg'
 import { FaCaretDown } from "react-icons/fa";
+import axios from 'axios';
 const Navbar = () => {
   const [isShow,setShow]=useState(false)
   const userInfo = useSelector((state)=>state.users)
   const navigate = useNavigate()
   useEffect(()=>{
+    
     if(userInfo.length == 0){
         navigate('/signIn')
       }
@@ -24,10 +26,21 @@ const Navbar = () => {
   const handleShow=()=>{
     setShow(!isShow)
   }
+  const handleLogOut=async()=>{
+    try {
+      await axios.get('http://localhost:4000/api/auth/logOut',{withCredentials:true})
+      if(!userInfo[0]){
+        navigate('/signIn')
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+ 
   return (
     <nav className=" bg-white border-b border-slate-200">
       <div className="container py-[5px]">
-        <div className='flex items-center gap-30'>
+        <div className="flex items-center gap-30">
           <div className="flex items-center gap-2">
             <div className="w-10 overflow-hidden">
               <img className="w-full" src={Logo} alt="logo" />
@@ -41,69 +54,88 @@ const Navbar = () => {
               />
             </div>
           </div>
-          <ul className='flex items-center gap-10'>
-            <NavLink to={'/'} className={({isActive})=>{
-              `${isActive ? "border-b text-red-300 border-red-400":"border-none"}flex flex-col items-center text-[13px]`
-            }}>
-                <IoHome className='text-2xl'/>
-                Home
+          <ul className="flex items-center gap-10">
+            <NavLink
+              to={"/"}
+              className={({ isActive }) => {
+                `${
+                  isActive ? "border-b text-red-300 border-red-400" : "border-none"
+                }flex flex-col items-center text-[13px]`;
+              }}
+            >
+              <IoHome className="text-2xl" />
+              Home
             </NavLink>
-            <NavLink to={'/mynetwork'} className={'flex flex-col items-center text-[13px]'}>
-                <img src={network} alt="network-icon" />
-                My Network
+            <NavLink to={"/mynetwork"} className={"flex flex-col items-center text-[13px]"}>
+              <img src={network} alt="network-icon" />
+              My Network
             </NavLink>
-            <NavLink to={'/jobs'} className={'flex flex-col items-center text-[13px]'}>
+            <NavLink to={"/jobs"} className={"flex flex-col items-center text-[13px]"}>
               <img src={jobs} alt="jobs-icon" />
-                Jobs
+              Jobs
             </NavLink>
-            <NavLink to={'/massaging'} className={'flex flex-col items-center text-[13px]'}>
-                <img src={messaging} alt="messaging-icon" />
-                Massaging
+            <NavLink to={"/massaging"} className={"flex flex-col items-center text-[13px]"}>
+              <img src={messaging} alt="messaging-icon" />
+              Massaging
             </NavLink>
-            <NavLink to={'/notifications'} className={'flex flex-col items-center text-[13px]'}>
-                <img src={notify} alt="notify-icon" />
-                Notifications
+            <NavLink to={"/notifications"} className={"flex flex-col items-center text-[13px]"}>
+              <img src={notify} alt="notify-icon" />
+              Notifications
             </NavLink>
-            <div onClick={handleShow} className={'flex flex-col items-center border-r cursor-pointer border-slate-300 pr-5 relative'}>
-              <div className='w-8 h-8 rounded-full bg-gray-500 overflow-hidden'>
-                <img className='w-full' src="" alt="img" />
+            <div
+              className={"flex flex-col items-center border-r border-slate-300 pr-5 relative"}
+            >
+              <div 
+              onClick={handleShow} className="w-8 h-8 rounded-full bg-gray-500 overflow-hidden cursor-pointer">
+                <img className="w-full" src="" alt="img" />
               </div>
-                <span className='flex items-center text-[13px]'>
-                  profile
-                  <FaCaretDown/>
-                </span>
-                {
-                  isShow &&
-
-                  <div className='bg-white shadow-2xl rounded-[5px] w-[255px] p-2 border border-slate-200 absolute top-[62px] right-[20px]'>
-                      <div className='w-full flex gap-5'>
-                        <div className='w-12 h-12 overflow-hidden rounded-full bg-slate-400'>
-                          <img className='w-full' src="" alt="profile" />
+              <span className="flex items-center text-[13px]">
+                profile
+                <FaCaretDown />
+              </span>
+              {isShow && (
+                <div className="bg-white shadow-2xl rounded-[5px] w-[255px] p-2 border border-slate-200 absolute top-[62px] right-[20px]">
+                  <div className="w-full">
+                    <div className="border-b border-slate-300 py-3">
+                      <div className='flex ga-4'>
+                        <div className="w-12 h-12 overflow-hidden rounded-full bg-slate-400">
+                          <img className="w-full" src="" alt="profile" />
                         </div>
-                        <div className='w-1/2'>
-                          <p className='text-[13px]'>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Debitis molestiae, perferendis aperiam optio, labore similique in cum sint</p>
+                        <div className="w-3/4 flex items-center ml-2">
+                          <p className="text-[13px] text-shadow-black">
+                            {userInfo[0]?.lastName}
+                          </p>
                         </div>
                       </div>
+                      <div className='flex justify-between items-center mt-3'>
+                        <button className='bg-white border border-slate-500 rounded-[10px] w-[110px] h-[25px] justify-center items-center cursor-pointer'>view profile</button>
+                        <button className=' rounded-[10px] w-[110px] h-[25px] justify-center items-center bg-blue-500 text-white cursor-pointer'>verify</button>
+                      </div>
+                    </div>
+                    <NavLink onClick={handleLogOut} to={'/signOut'} className='mt-3 rounded-[10px] flex justify-center items-center w-[110px] h-[25px] bg-red-500 text-white cursor-pointer'>
+                      Sign Out
+                    </NavLink>
                   </div>
-                }
+                </div>
+              )}
             </div>
-            <div className={'flex flex-col items-center pl-0'}>
-              <div className='w-8 h-8 rounded-full overflow-hidden'>
-                <img className='w-full' src={business} alt="business-icon" />
+            <div className={"flex flex-col items-center pl-0"}>
+              <div className="w-8 h-8 rounded-full overflow-hidden">
+                <img className="w-full" src={business} alt="business-icon" />
               </div>
-                <span className='flex items-center text-[13px]'>
-                  Me
-                  <FaCaretDown/>
-                </span>
+              <span className="flex items-center text-[13px]">
+                Me
+                <FaCaretDown />
+              </span>
             </div>
-            <NavLink to={'/user'} className={'flex flex-col items-center pl-0'}>
-              <div className='w-[24px] h-[24px] bg-amber-200 overflow-hidden'>
-                <img className='w-full' src={primium} alt="primium-icon" />
+            <NavLink to={"/user"} className={"flex flex-col items-center pl-0"}>
+              <div className="w-[24px] h-[24px] bg-amber-200 overflow-hidden">
+                <img className="w-full" src={primium} alt="primium-icon" />
               </div>
-                <span className='flex items-center text-[13px]'>
-                  Try Premium for QAR0
-                  <FaCaretDown/>
-                </span>
+              <span className="flex items-center text-[13px]">
+                Try Premium for QAR0
+                <FaCaretDown />
+              </span>
             </NavLink>
           </ul>
         </div>
