@@ -4,6 +4,7 @@ import Inputs from '../../components/form-groupComponents/Inputs'
 import ButtonComponent from '../../components/ButtonComponent'
 import Logo from '../../assets/linkedin.png'
 import axios from 'axios'
+import { useNavigate } from 'react-router'
 const INITIAL_VALUE={
     firstName:'',
     lastName:'',
@@ -15,6 +16,7 @@ const SignUp = () => {
     const [userInp,setUserInp]=useState({...INITIAL_VALUE})
     const [err,setErrors]=useState(null)
     const [isLoding,setLoding]=useState(false)
+    const navigate = useNavigate()
     // handleChange function 
     const handleChange=(e)=>{
         setUserInp((prev)=>({
@@ -29,7 +31,7 @@ const handleSubmit = async (e) => {
     e.preventDefault()
     setLoding(true)
     try {
-       let result= await axios.post('http://localhost:4000/api/auth/signUp',{
+            await axios.post('http://localhost:4000/api/auth/signUp',{
             firstName:userInp.firstName,
             lastName:userInp.lastName,
             userName:userInp.userName,
@@ -38,7 +40,7 @@ const handleSubmit = async (e) => {
         },{
             withCredentials:true
         })
-        console.log(result);
+       navigate('/signIn')
         setLoding(false)
     } catch (error) {
         const errors=error.response.data || error.response

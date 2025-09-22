@@ -2,11 +2,14 @@ import { createSlice } from '@reduxjs/toolkit'
 const userSlice = createSlice({
     name:'linkedin',
     initialState:{
-        value:null,
+        users:[],
     },
     reducers:{
         addUserInfo:(state,action)=>{
-            state.value = action.payload
+            const existsuser = state.users.find(user=>user.id === action.payload.id)
+            if(!existsuser){
+                state.users.push(action.payload) 
+            }
         }
     }
 })

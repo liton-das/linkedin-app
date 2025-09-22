@@ -1,9 +1,11 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useState } from 'react'
 import Inputs from '../../components/form-groupComponents/Inputs'
 import ButtonComponent from '../../components/ButtonComponent'
 import Logo from '../../assets/linkedin.png'
 import axios from 'axios'
+import { useNavigate } from 'react-router'
+import { useSelector } from 'react-redux'
 const INITIAL_VALUE={
     email:'',
     password:''
@@ -12,6 +14,7 @@ const SignIn = () => {
     const [userInp,setUserInp]=useState({...INITIAL_VALUE})
         const [err,setErrors]=useState(null)
         const [isLoding,setLoding]=useState(false)
+        const navigate = useNavigate()
         // handleChange function 
         const handleChange=(e)=>{
             setUserInp((prev)=>({
@@ -26,25 +29,30 @@ const SignIn = () => {
         e.preventDefault()
         setLoding(true)
         try {
-           let result= await axios.post('http://localhost:4000/api/auth/logIn',{
-                email:userInp.email,
-                password:userInp.password
-            },{
+              await axios.post('http://localhost:4000/api/auth/logIn',{
+              email:userInp.email,
+              password:userInp.password
+              },{
                 withCredentials:true
-            })
-            setLoding(false)
-            console.log(result);
+              })
+              setLoding(false)
+              navigate('/')
+            } catch (error) {
+              const errors=error.response.data || error.response
+              console.log(error.response)
+              setLoding(false)
+              setErrors(errors.message)
+            }
             
-        } catch (error) {
-            const errors=error.response.data || error.response
-            console.log(error.response)
-            setLoding(false)
-            setErrors(errors.message)
-        }
-    
-        // set empty field
-        setUserInp({...INITIAL_VALUE})
+            // set empty field
+            setUserInp({...INITIAL_VALUE})
     }
+  const userInfo = useSelector((state)=>state.users)
+  useEffect(()=>{
+    if(userInfo.length == 1){
+        navigate('/')
+      }
+  },[userInfo, navigate])
   return (
     <>
       <div className="py-[48px]">
