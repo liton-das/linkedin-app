@@ -1,9 +1,13 @@
 import axios from 'axios'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { addUserInfo } from '../redux/features/userSlice'
+import { addUserInfo, isEdit } from '../redux/features/userSlice'
+import EditProfile from '../components/EditProfile'
 const Home = () => {
   const userInfo = useSelector((state)=>state.users)
+  const isOpen = useSelector((state)=>state.isEdit)
+  // const [isOpen,setIsOpen]=useState(false)
+
   console.log('isdata',userInfo.length);
   
   const dispatch = useDispatch()
@@ -26,11 +30,21 @@ const Home = () => {
   }
   
  }
+//  handleIsEdit
+const handleIsEdit=()=>{
+  dispatch(isEdit(!isOpen))
+}
   return (
     <>
-      <h1></h1>
+    {isOpen &&
+
+      <div className="absolute top-0 left-0 w-screen h-[100vh] overflow-auto z-0 opacity-[0.8] bg-[#00000085]">
+        <EditProfile/>
+        <p onClick={handleIsEdit} className='tex-[22px] text-white absolute top-0'>x</p>
+      </div>
+      }
     </>
   )
 }
 
-export default Home
+export default Home 

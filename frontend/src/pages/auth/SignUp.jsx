@@ -4,7 +4,7 @@ import Inputs from '../../components/form-groupComponents/Inputs'
 import ButtonComponent from '../../components/ButtonComponent'
 import Logo from '../../assets/linkedin.png'
 import axios from 'axios'
-import { useNavigate } from 'react-router'
+import { Link, useNavigate } from 'react-router'
 const INITIAL_VALUE={
     firstName:'',
     lastName:'',
@@ -122,6 +122,9 @@ const handleSubmit = async (e) => {
           ) : (
             <ButtonComponent text={"SignUp"} />
           )}
+          <div className='mt-3'>
+            <p>You have an account signIn here? <Link to={'/signIn'} className='text-blue-600'>signIn</Link></p>
+          </div>
         </form>
       </div>
     </div>

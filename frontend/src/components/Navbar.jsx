@@ -27,14 +27,15 @@ const Navbar = () => {
     setShow(!isShow)
   }
   const handleLogOut=async()=>{
-    try {
-      await axios.get('http://localhost:4000/api/auth/logOut',{withCredentials:true})
-      if(!userInfo[0]){
-        navigate('/signIn')
-      }
-    } catch (error) {
+  
+    navigate('/signIn')
+     try {
+       await axios.get('http://localhost:4000/api/auth/logOut',{withCredentials:true})
+     } catch (error) {
       console.log(error);
-    }
+      
+     }
+    console.log('hello');
   }
  
   return (
@@ -112,9 +113,9 @@ const Navbar = () => {
                         <button className=' rounded-[10px] w-[110px] h-[25px] justify-center items-center bg-blue-500 text-white cursor-pointer'>verify</button>
                       </div>
                     </div>
-                    <NavLink onClick={handleLogOut} to={'/signOut'} className='mt-3 rounded-[10px] flex justify-center items-center w-[110px] h-[25px] bg-red-500 text-white cursor-pointer'>
+                    <button onClick={handleLogOut} className='mt-3 rounded-[10px] flex justify-center items-center w-[110px] h-[25px] bg-red-500 text-white cursor-pointer'>
                       Sign Out
-                    </NavLink>
+                    </button>
                   </div>
                 </div>
               )}

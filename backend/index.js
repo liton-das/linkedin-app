@@ -16,7 +16,9 @@ app.use(express.urlencoded({extended:true}))
 app.use(cookieParser())
 app.use(morgan('dev'))
 app.use(route)
-
+const middleware=[
+    morgan('dev')
+]
 
 const port = process.env.PORT || 8080
 

@@ -3,6 +3,7 @@ const userSlice = createSlice({
     name:'linkedin',
     initialState:{
         users:[],
+        isEdit:false
     },
     reducers:{
         addUserInfo:(state,action)=>{
@@ -10,8 +11,11 @@ const userSlice = createSlice({
             if(!existsuser){
                 state.users.push(action.payload) 
             }
+        },
+        isEdit:(state,action)=>{
+            state.isEdit = action.payload
         }
     }
 })
-export const {addUserInfo}=userSlice.actions
+export const {addUserInfo,isEdit}=userSlice.actions
 export default userSlice.reducer

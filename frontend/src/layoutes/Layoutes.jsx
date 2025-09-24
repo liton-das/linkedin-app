@@ -1,15 +1,23 @@
 import React from 'react'
 import { Outlet } from 'react-router'
 import Navbar from '../components/Navbar'
+import LeftSideNav from '../components/LeftSideNav'
+import RightSideNavbar from '../components/RightSideNavbar'
 
 const Layoutes = () => {
   
   return (
     <>
-      <Navbar/>
-      <Outlet/>
+      <Navbar />
+      <div className='container pt-6'>
+        <div className='flex justify-between '>
+          <LeftSideNav />
+            <Outlet />
+          <RightSideNavbar />
+        </div>
+      </div>
     </>
-  )
+  );
 }
 
 export default Layoutes
