@@ -30,17 +30,13 @@ const Home = () => {
   }
   
  }
-//  handleIsEdit
-const handleIsEdit=()=>{
-  dispatch(isEdit(!isOpen))
-}
+
   return (
     <>
     {isOpen &&
 
       <div className="absolute top-0 left-0 w-screen h-[100vh] overflow-auto z-0 opacity-[0.8] bg-[#00000085]">
         <EditProfile/>
-        <p onClick={handleIsEdit} className='tex-[22px] text-white absolute top-0'>x</p>
       </div>
       }
     </>
