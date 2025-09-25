@@ -36,6 +36,9 @@ const EditProfile = () => {
     const [inp,setInp]=useState({...INITIAL_VALUE})
     const [skills,setSkills]=useState([])
     const [newSkills,newSetSkills]=useState('')
+    // state for img
+const [coverPhoto,setCoverPhoto]=useState(null)
+const [profilePhoto,setProfilePhoto]=useState(null)
 const dispatch = useDispatch()
     //  handleIsEdit
 const handleIsEdit=()=>{
@@ -76,14 +79,7 @@ const handleEducation=(e)=>{
         [e.target.name]:e.target.value
     }))
 }
-// handleExperience function
-const handleChangeExperience =(e)=>{
-    setExperienceInp((prev)=>({
-        ...prev,
-        [e.target.name]:e.target.value
-    }))
-
-}
+// handleAddEducation function
 const handleAddEducation=()=>{
     const {collage,degree,fieldOfStudy}=educationInp
     let data={
@@ -96,11 +92,12 @@ const handleAddEducation=()=>{
     }
     setEducationInp('')    
 }
+// handleRemoveEducation
+const handleRemoveEducation=(educations)=>{
+    const currEducation = education.filter(item=>item != educations)
+    setEducation(currEducation)
+}
 
-
-// state for img
-const [coverPhoto,setCoverPhoto]=useState(null)
-const [profilePhoto,setProfilePhoto]=useState(null)
 // handleCoverImg
 const handleCoverImg=(e)=>{
     const getFile = e.target.files[0]
@@ -115,6 +112,14 @@ const handleProfileImg=(e)=>{
     const photoUrl = URL.createObjectURL(getFile)
     setProfilePhoto(photoUrl)
 }
+// handleExperience function
+const handleChangeExperience =(e)=>{
+    setExperienceInp((prev)=>({
+        ...prev,
+        [e.target.name]:e.target.value
+    }))
+
+}
 // handleAddExperience
 const handleAddExperience =()=>{
     const {title,decription,company}=experienceInp
@@ -123,16 +128,23 @@ const handleAddExperience =()=>{
         decription:decription,
         company:company
     }
-    setExperiences([...experiences,data])
+    if(experienceInp && !experiences.includes(experienceInp)){
+        setExperiences([...experiences,data])
+        setExperienceInp('')
+    }
+}
+// handeleRemoveExperience
+const handeleRemoveExperience=(experience)=>{
+    const data= experiences.filter(item=>item!=experience)
+    setExperiences(data)
 }
   return (
     <>
       <div className="w-[600px] absolute overflow-auto  left-[30%] top-[30%] py-10 px-4 rounded-[5px] bg-white z-10 ">
         <div>
           <div className="flex justify-between cursor-pointer w-full p-3 bg-slate-200 rounded-[5px] relative">
-            <div className="w-full h-[200px] flex justify-center items-center overflow-hidden">
+            <div onClick={() => coverImg.current.click()} className="w-full h-[200px] flex justify-center items-center overflow-hidden">
               <img
-                onClick={() => coverImg.current.click()}
                 className="w-full"
                 src={coverPhoto}
                 alt="cover-img"
@@ -207,10 +219,13 @@ const handleAddExperience =()=>{
               type={"text"}
               placeholder={"gender (male/female/other)"}
             />
-            <div className="flex flex-col bg-white border border-slate-300 p-4 rounded-[5px] my-4">
+            {
+                education.length != 0 &&
+                <div className="flex flex-col bg-white border border-slate-300 p-4 rounded-[5px] my-4">
               {education.map((item, i) => (
-                <div key={i} className="py-2 border-b border-slate-200 shadow-sm px-5 mb-4">
-                  <p className="text-sla">
+                <div key={i} className="flex justify-between items-center py-2 border-b border-slate-200 shadow-sm px-5 mb-4">
+                  <div>
+                    <p className="text-sla">
                     <span className="font-semibold text-base me-2">collage:</span> {item?.collage}
                   </p>
                   <p>
@@ -220,9 +235,17 @@ const handleAddExperience =()=>{
                     <span className="font-semibold text-base me-2">fieldOfStudy:</span>{" "}
                     {item?.fieldOfStudy}
                   </p>
+                  </div>
+                  <button>
+                        <MdClose
+                        className={"text-red-500 font-bold cursor-pointer text-[24px]"}
+                        onClick={() => handleRemoveEducation(item)}
+                        />{" "}
+                    </button>
                 </div>
               ))}
-            </div>
+                </div>
+            }
             <div className="flex flex-col bg-white border border-slate-300 p-4 rounded-[5px] ">
               <Inputs
                 onChange={handleEducation}
@@ -265,22 +288,36 @@ const handleAddExperience =()=>{
               ))}
             </div>
 
-               <div className={"flex gap-5 flex-wrap items-center my-3"}>
-              {experiences.map((item, index) => (
-                <button
-                  key={index}
-                  className="border border-slate-300 text-[#333] cursor-pointer rounded-[5px] px-[8px] py-[6px] shadow-2xl flex gap-3 items-center"
-                >
-                  {item}{" "}
-                  <MdClose
-                    className={"text-red-500 font-bold text-[20px]"}
-                  />{" "}
-                </button>
-              ))}
-            </div>
+              {
+                experiences.length != 0 &&
+                <div className="flex flex-col bg-white border border-slate-300 p-4 rounded-[5px] my-4">
+                {experiences.map((item, i) => (
+                    <div key={i} className="py-2 border-b flex justify-between items-center border-slate-200 shadow-sm px-5 mb-4">
+                    <div>
+                        <p className="text-sla">
+                        <span className="font-semibold text-base me-2">Title:</span> {item?.title}
+                        </p>
+                        <p>
+                        <span className="font-semibold text-base me-2">Decription:</span>
+                        {item?.decription}
+                        </p>
+                        <p>
+                        <span className="font-semibold text-base me-2">Company:</span> {item?.company}
+                        </p>
+                    </div>
+                    <button>
+                        <MdClose
+                        className={"text-red-500 font-bold cursor-pointer text-[24px]"}
+                        onClick={() => handeleRemoveExperience(item)}
+                        />{" "}
+                    </button>
+                    </div>
+                ))}
+                </div>
+              }
             <div className="flex flex-col bg-white border border-slate-300 p-4 rounded-[5px] ">
               <Inputs
-                onChange={handleEducation}
+                onChange={handleChangeExperience}
                 type={"text"}
                 value={experienceInp.title}
                 text={"Title"}
@@ -288,7 +325,7 @@ const handleAddExperience =()=>{
                 placeholder={"title"}
               />
               <Inputs
-                onChange={handleEducation}
+                onChange={handleChangeExperience}
                 type={"text"}
                 value={experienceInp.decription}
                 text={"Decription"}
@@ -296,7 +333,7 @@ const handleAddExperience =()=>{
                 placeholder={"decription"}
               />
               <Inputs
-                onChange={handleEducation}
+                onChange={handleChangeExperience}
                 type={"text"}
                 value={experienceInp.company}
                 text={"Company"}
@@ -305,7 +342,6 @@ const handleAddExperience =()=>{
               />
               <ButtonComponent onClick={handleAddExperience} text={"Add Experience"} />
             </div>
-
 
             <div className={"flex gap-5 flex-wrap items-center my-3"}>
               {skills.map((item, index) => (
@@ -321,7 +357,6 @@ const handleAddExperience =()=>{
                 </button>
               ))}
             </div>
-
 
             <Inputs
               onChange={(e) => newSetSkills(e.target.value)}
