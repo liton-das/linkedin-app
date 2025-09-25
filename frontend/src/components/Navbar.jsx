@@ -91,7 +91,7 @@ const Navbar = () => {
                 <img className="w-full" src="" alt="img" />
               </div>
               <span className="flex items-center text-[13px]">
-                profile
+                {userInfo[0]?.firstName}
                 <FaCaretDown />
               </span>
               {isShow && (
