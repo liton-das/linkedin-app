@@ -10,7 +10,7 @@ const Layoutes = () => {
     <>
       <Navbar />
       <div className='container pt-6'>
-        <div className='flex justify-between '>
+        <div className='flex justify-between gap-5'>
           <LeftSideNav />
             <Outlet />
           <RightSideNavbar />

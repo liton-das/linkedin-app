@@ -1,191 +1,184 @@
-import React, { useRef, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux';
-import { addUserInfo, isEdit } from '../redux/features/userSlice';
+import React, { useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { addUserInfo, isEdit } from "../redux/features/userSlice";
 import { MdClose } from "react-icons/md";
-import Inputs from './form-groupComponents/Inputs';
-import ButtonComponent from './ButtonComponent';
-import { CiCamera } from 'react-icons/ci';
-import axios from 'axios'
+import Inputs from "./form-groupComponents/Inputs";
+import ButtonComponent from "./ButtonComponent";
+import { CiCamera } from "react-icons/ci";
+import axios from "axios";
 const educationField = {
   collage: "",
   degree: "",
   fieldOfStudy: "",
 };
-const EXPERIENCE_VALUE= {
-  title: '',
-  company: '',
-  decription: '',
+const EXPERIENCE_VALUE = {
+  title: "",
+  company: "",
+  decription: "",
 };
 const EditProfile = () => {
-    const isOpen = useSelector((state)=>state.isEdit)
-    const userInfo = useSelector((state)=>state.users)
-    const [educationInp,setEducationInp]=useState({...educationField})
-    const [experienceInp,setExperienceInp]=useState({...EXPERIENCE_VALUE})
-    const [experiences,setExperiences]=useState(userInfo[0].experience||[])
-    const [education,setEducation]=useState(userInfo[0].education||[])
+  const isOpen = useSelector((state) => state.isEdit);
+  const userInfo = useSelector((state) => state.users);
+  const [educationInp, setEducationInp] = useState({ ...educationField });
+  const [experienceInp, setExperienceInp] = useState({ ...EXPERIENCE_VALUE });
+  const [experiences, setExperiences] = useState(userInfo[0].experience || []);
+  const [education, setEducation] = useState(userInfo[0].education || []);
 
-    let coverImg=useRef()
-    let profileImg=useRef()
-    let INITIAL_VALUE = {
-        firstName:userInfo[0].firstName || '',
-        lastName:userInfo[0].lastName||'',
-        userName:userInfo[0].userName || '',
-        headline:userInfo[0].headline || '',
-        location:userInfo[0].location||'',
-        gender:userInfo[0].gender || ''
-    }
-    const [inp,setInp]=useState({...INITIAL_VALUE})
-    const [skills,setSkills]=useState(userInfo[0].skills ||[])
-    const [newSkills,newSetSkills]=useState('')
-    // state for img
-const [coverPhoto,setCoverPhoto]=useState(userInfo[0]?.coverImg||null)
-const [backendImg,setBackendImg]=useState(null)
-const [profilePhoto,setProfilePhoto]=useState(userInfo[0]?.profileImg||null)
-const [backendCoverImg,setBackendCoverImg]=useState(null)
-const dispatch = useDispatch()
-    //  handleIsEdit
-const handleIsEdit=()=>{
-  dispatch(isEdit(!isOpen))
-}
+  let coverImg = useRef();
+  let profileImg = useRef();
+  let INITIAL_VALUE = {
+    firstName: userInfo[0].firstName || "",
+    lastName: userInfo[0].lastName || "",
+    userName: userInfo[0].userName || "",
+    headline: userInfo[0].headline || "",
+    location: userInfo[0].location || "",
+    gender: userInfo[0].gender || "",
+  };
+  const [inp, setInp] = useState({ ...INITIAL_VALUE });
+  const [skills, setSkills] = useState(userInfo[0].skills || []);
+  const [newSkills, newSetSkills] = useState("");
+  // state for img
+  const [coverPhoto, setCoverPhoto] = useState(userInfo[0]?.coverImg || null);
+  const [backendImg, setBackendImg] = useState(null);
+  const [profilePhoto, setProfilePhoto] = useState(userInfo[0]?.profileImg || null);
+  const [backendCoverImg, setBackendCoverImg] = useState(null);
+  const dispatch = useDispatch();
+  //  handleIsEdit
+  const handleIsEdit = () => {
+    dispatch(isEdit(!isOpen));
+  };
 
-// handleChange
-const handleChange=(e)=>{
-    setInp((prev)=>({
-        ...prev,
-        [e.target.name]:e.target.value
-    }))
-}
-// handleSubmit 
-const handleSubmit=(e)=>{
-    e.preventDefault()
+  // handleChange
+  const handleChange = (e) => {
+    setInp((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
+  };
+  // handleSubmit
+  const handleSubmit = (e) => {
+    e.preventDefault();
+  };
+  // handleskills function
+  const handleskills = () => {
+    if (newSkills.startsWith(" ")) {
+      return alert("str");
+    }
+    if (newSkills && !skills.includes(newSkills)) {
+      setSkills([...skills, newSkills]);
+    }
+    newSetSkills("");
+  };
+  //handleRemoveSkill function for filtering
+  const handleRemoveSkill = (skill) => {
+    const currskill = skills.filter((item) => item != skill);
+    setSkills(currskill);
+  };
+  // handleEducation
+  const handleEducation = (e) => {
+    setEducationInp((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
+  };
+  // handleAddEducation function
+  const handleAddEducation = () => {
+    const { collage, degree, fieldOfStudy } = educationInp;
+    let data = {
+      collage: collage,
+      degree: degree,
+      fieldOfStudy: fieldOfStudy,
+    };
+    if (educationInp && !education.includes(educationInp)) {
+      setEducation([data, ...education]);
+    }
+    setEducationInp("");
+  };
+  // handleRemoveEducation
+  const handleRemoveEducation = (educations) => {
+    const currEducation = education.filter((item) => item != educations);
+    setEducation(currEducation);
+  };
 
-    
-}
-// handleskills function
-const handleskills = () =>{
-    if (newSkills.startsWith(' ')) {
-        return alert('str')
-    }
-    if(newSkills && !skills.includes(newSkills)){
-        setSkills([...skills,newSkills])
-    }
-    newSetSkills('')
-}
-//handleRemoveSkill function for filtering
-const handleRemoveSkill =(skill)=>{
-    const currskill = skills.filter(item=> item != skill)
-    setSkills(currskill)
-}
-// handleEducation
-const handleEducation=(e)=>{
-    setEducationInp((prev)=>({
-        ...prev,
-        [e.target.name]:e.target.value
-    }))
-}
-// handleAddEducation function
-const handleAddEducation=()=>{
-    const {collage,degree,fieldOfStudy}=educationInp
-    let data={
-        collage:collage,
-        degree:degree,
-        fieldOfStudy:fieldOfStudy
-    }
-    if(educationInp && !education.includes(educationInp)){
-        setEducation([data,...education])
-    }
-    setEducationInp('')    
-}
-// handleRemoveEducation
-const handleRemoveEducation=(educations)=>{
-    const currEducation = education.filter(item=>item != educations)
-    setEducation(currEducation)
-}
+  // handleCoverImg
+  const handleCoverImg = (e) => {
+    const getFile = e.target.files[0];
+    setBackendCoverImg(getFile);
+    const url = URL.createObjectURL(getFile);
+    setCoverPhoto(url);
+  };
 
-// handleCoverImg
-const handleCoverImg=(e)=>{
-    const getFile = e.target.files[0]
-    setBackendCoverImg(getFile)
-    const url = URL.createObjectURL(getFile)
-    setCoverPhoto(url)
-}
-
-// handleProfileImg
-const handleProfileImg=(e)=>{
-    const getFile=e.target.files[0]
-    setBackendImg(getFile)
-    const photoUrl = URL.createObjectURL(getFile)
-    setProfilePhoto(photoUrl)
-}
-// handleExperience function
-const handleChangeExperience =(e)=>{
-    setExperienceInp((prev)=>({
-        ...prev,
-        [e.target.name]:e.target.value
-    }))
-
-}
-// handleAddExperience
-const handleAddExperience =()=>{
-    const {title,decription,company}=experienceInp
-    const data={
-        title:title,
-        decription:decription,
-        company:company
+  // handleProfileImg
+  const handleProfileImg = (e) => {
+    const getFile = e.target.files[0];
+    setBackendImg(getFile);
+    const photoUrl = URL.createObjectURL(getFile);
+    setProfilePhoto(photoUrl);
+  };
+  // handleExperience function
+  const handleChangeExperience = (e) => {
+    setExperienceInp((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
+  };
+  // handleAddExperience
+  const handleAddExperience = () => {
+    const { title, decription, company } = experienceInp;
+    const data = {
+      title: title,
+      decription: decription,
+      company: company,
+    };
+    if (experienceInp && !experiences.includes(experienceInp)) {
+      setExperiences([data, ...experiences]);
     }
-    if(experienceInp && !experiences.includes(experienceInp)){
-        setExperiences([data,...experiences])
-    }
-    setExperienceInp('')
+    setExperienceInp("");
     console.log(experiences);
-    
-}
-// handeleRemoveExperience
-const handeleRemoveExperience=(experience)=>{
-    const data= experiences.filter(item=>item!=experience)
-    setExperiences(data)
-}
-// handleSave userProfile img
-const handleSave = async ()=>{
-  try {
-    const {firstName,lastName,userName,headline,gender,location}=inp
-    let formData= new FormData()
-    formData.append('firstName',firstName)
-    formData.append('lastName',lastName)
-    formData.append('userName',userName)
-    formData.append('headline',headline)
-    formData.append('gender',gender)
-    formData.append('location',location)
-    formData.append('skills',JSON.stringify(skills))
-    formData.append('education',JSON.stringify(education))
-    formData.append('experience',JSON.stringify(experiences))
-    if(backendCoverImg){
-      formData.append('coverImg',backendCoverImg)
+  };
+  // handeleRemoveExperience
+  const handeleRemoveExperience = (experience) => {
+    const data = experiences.filter((item) => item != experience);
+    setExperiences(data);
+  };
+  // handleSave userProfile img
+  const handleSave = async () => {
+    try {
+      const { firstName, lastName, userName, headline, gender, location } = inp;
+      let formData = new FormData();
+      formData.append("firstName", firstName);
+      formData.append("lastName", lastName);
+      formData.append("userName", userName);
+      formData.append("headline", headline);
+      formData.append("gender", gender);
+      formData.append("location", location);
+      formData.append("skills", JSON.stringify(skills));
+      formData.append("education", JSON.stringify(education));
+      formData.append("experience", JSON.stringify(experiences));
+      if (backendCoverImg) {
+        formData.append("coverImg", backendCoverImg);
+      }
+      if (backendImg) {
+        formData.append("profileImg", backendImg);
+      }
+      let result = await axios.put("http://localhost:4000/api/user/updateProfile", formData, {
+        withCredentials: true,
+      });
+      dispatch(addUserInfo(result.data.user));
+    } catch (error) {
+      console.log(error);
     }
-    if(backendImg){
-      formData.append('profileImg',backendImg)
-    }
-    let result = await axios.put('http://localhost:4000/api/user/updateProfile',formData,
-      {withCredentials:true})
-    dispatch(addUserInfo(result.data.user))
-    
-  } catch (error) {
-    console.log(error);
-    
-  }
-  
-}
+  };
   return (
     <>
-      <div className="w-[600px] absolute overflow-auto  left-[30%] top-[30%] py-10 px-4 rounded-[5px] bg-white z-10 ">
+      <div className="w-[600px] absolute left-[30%] top-[30%] py-10 px-4 rounded-[5px] bg-white ">
         <div>
           <div className="flex justify-between cursor-pointer w-full p-3 bg-slate-200 rounded-[5px] relative">
-            <div onClick={() => coverImg.current.click()} className="w-full h-[200px] flex justify-center items-center overflow-hidden">
-              <img
-                className="w-full"
-                src={coverPhoto}
-                alt="cover-img"
-              />
+            <div
+              onClick={() => coverImg.current.click()}
+              className="w-full h-[200px] flex justify-center items-center overflow-hidden"
+            >
+              <img className="w-full" src={coverPhoto} alt="cover-img" />
               <input onChange={handleCoverImg} type="file" hidden ref={coverImg} />
               <span className="text-[24px] absolute top-[16px] right-[20px] text-slate-700 shadow-2xl">
                 <CiCamera />
@@ -206,7 +199,7 @@ const handleSave = async ()=>{
         >
           <MdClose />
         </p>
-        <div className="mt-14">
+        <div className="mt-14 overflow-auto">
           <div onSubmit={handleSubmit} className="flex flex-col">
             <Inputs
               onChange={handleChange}
@@ -256,33 +249,36 @@ const handleSave = async ()=>{
               type={"text"}
               placeholder={"gender (male/female/other)"}
             />
-            {
-                education.length != 0 &&
-                <div className="flex flex-col bg-white border border-slate-300 p-4 rounded-[5px] my-4">
-              {education.map((item, i) => (
-                <div key={i} className="flex justify-between items-center py-2 border-b border-slate-200 shadow-sm px-5 mb-4">
-                  <div>
-                    <p className="text-sla">
-                    <span className="font-semibold text-base me-2">collage:</span> {item?.collage}
-                  </p>
-                  <p>
-                    <span className="font-semibold text-base me-2">degree:</span> {item?.degree}
-                  </p>
-                  <p>
-                    <span className="font-semibold text-base me-2">fieldOfStudy:</span>{" "}
-                    {item?.fieldOfStudy}
-                  </p>
-                  </div>
-                  <button>
-                        <MdClose
+            {education.length != 0 && (
+              <div className="flex flex-col bg-white border border-slate-300 p-4 rounded-[5px] my-4">
+                {education.map((item, i) => (
+                  <div
+                    key={i}
+                    className="flex justify-between items-center py-2 border-b border-slate-200 shadow-sm px-5 mb-4"
+                  >
+                    <div>
+                      <p className="text-sla">
+                        <span className="font-semibold text-base me-2">collage:</span>{" "}
+                        {item?.collage}
+                      </p>
+                      <p>
+                        <span className="font-semibold text-base me-2">degree:</span> {item?.degree}
+                      </p>
+                      <p>
+                        <span className="font-semibold text-base me-2">fieldOfStudy:</span>{" "}
+                        {item?.fieldOfStudy}
+                      </p>
+                    </div>
+                    <button>
+                      <MdClose
                         className={"text-red-500 font-bold cursor-pointer text-[24px]"}
                         onClick={() => handleRemoveEducation(item)}
-                        />{" "}
+                      />{" "}
                     </button>
-                </div>
-              ))}
-                </div>
-            }
+                  </div>
+                ))}
+              </div>
+            )}
             <div className="flex flex-col bg-white border border-slate-300 p-4 rounded-[5px] ">
               <Inputs
                 onChange={handleEducation}
@@ -310,48 +306,37 @@ const handleSave = async ()=>{
               />
               <ButtonComponent onClick={handleAddEducation} text={"Add Education"} />
             </div>
-            <div className={"flex gap-5 flex-wrap items-center my-3"}>
-              {skills.map((item, index) => (
-                <button
-                  key={index}
-                  className="border border-slate-300 text-[#333] cursor-pointer rounded-[5px] px-[8px] py-[6px] shadow-2xl flex gap-3 items-center"
-                >
-                  {item}{" "}
-                  <MdClose
-                    className={"text-red-500 font-bold text-[20px]"}
-                    onClick={() => handleRemoveSkill(item)}
-                  />{" "}
-                </button>
-              ))}
-            </div>
 
-              {
-                experiences.length != 0 &&
-                <div className="flex flex-col bg-white border border-slate-300 p-4 rounded-[5px] my-4">
+            {experiences.length != 0 && (
+              <div className="flex flex-col bg-white border border-slate-300 p-4 rounded-[5px] my-4">
                 {experiences.map((item, i) => (
-                    <div key={i} className="py-2 border-b flex justify-between items-center border-slate-200 shadow-sm px-5 mb-4">
+                  <div
+                    key={i}
+                    className="py-2 border-b flex justify-between items-center border-slate-200 shadow-sm px-5 mb-4"
+                  >
                     <div>
-                        <p className="text-sla">
+                      <p className="text-sla">
                         <span className="font-semibold text-base me-2">Title:</span> {item?.title}
-                        </p>
-                        <p>
+                      </p>
+                      <p>
                         <span className="font-semibold text-base me-2">Decription:</span>
                         {item?.decription}
-                        </p>
-                        <p>
-                        <span className="font-semibold text-base me-2">Company:</span> {item?.company}
-                        </p>
+                      </p>
+                      <p>
+                        <span className="font-semibold text-base me-2">Company:</span>{" "}
+                        {item?.company}
+                      </p>
                     </div>
                     <button>
-                        <MdClose
+                      <MdClose
                         className={"text-red-500 font-bold cursor-pointer text-[24px]"}
                         onClick={() => handeleRemoveExperience(item)}
-                        />{" "}
+                      />{" "}
                     </button>
-                    </div>
+                  </div>
                 ))}
-                </div>
-              }
+              </div>
+            )}
             <div className="flex flex-col bg-white border border-slate-300 p-4 rounded-[5px] ">
               <Inputs
                 onChange={handleChangeExperience}
@@ -404,12 +389,17 @@ const handleSave = async ()=>{
               placeholder={"add your new skills"}
             />
             <ButtonComponent onClick={handleskills} text={"Add Skills"} />
-            <button onClick={()=>handleSave()} className='py-[6px] px-[10px] cursor-pointer mt-5 bg-white shadow-2xl border border-slate-400 rounded-[5px] text-[#000]'>Save</button>
+            <button
+              onClick={() => handleSave()}
+              className="py-[6px] px-[10px] cursor-pointer mt-5 bg-white shadow-2xl border border-slate-400 rounded-[5px] text-[#000]"
+            >
+              Save
+            </button>
           </div>
         </div>
       </div>
     </>
   );
-}
+};
 
-export default EditProfile
+export default EditProfile;

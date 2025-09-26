@@ -1,4 +1,5 @@
 const authApi = require('./api/authRoutes')
+const { postApi } = require('./api/postRoute')
 const userApi = require('./api/userRoutes')
 
 const route = require('express').Router()
@@ -6,5 +7,7 @@ const route = require('express').Router()
 route.use('/api/auth',authApi)
 // get user route
 route.use('/api/user',userApi)
+// create post api 
+route.use('/post',postApi)
 
 module.exports=route

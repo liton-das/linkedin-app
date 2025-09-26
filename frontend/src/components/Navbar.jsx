@@ -42,7 +42,7 @@ const Navbar = () => {
   return (
     <nav className=" bg-white border-b border-slate-200">
       <div className="container py-[5px]">
-        <div className="flex items-center gap-30">
+        <div className="flex items-center gap-40">
           <div className="flex items-center gap-2">
             <div className="w-10 overflow-hidden">
               <img className="w-full" src={Logo} alt="logo" />
