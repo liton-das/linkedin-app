@@ -8,7 +8,7 @@ const Profile = () => {
     <div>
       <div className=" relative">
         <div className=' w-full h-20 flex justify-between cursor-pointer outline-2 overflow-hidden outline-slate-400 rounded-[5px]'>
-          <img className="w-full flex justify-center items-center" src={userInfo[0]?.coverImg} alt="cover-img" />
+          <img className="w-full flex justify-center items-center " src={userInfo[0]?.coverImg} alt="cover-img" />
         </div>
         <span className="text-[24px] text-white absolute top-[16px] right-[16px] shadow-2xl">
           <CiCamera />

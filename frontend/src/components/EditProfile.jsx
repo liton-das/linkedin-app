@@ -21,8 +21,8 @@ const EditProfile = () => {
     const userInfo = useSelector((state)=>state.users)
     const [educationInp,setEducationInp]=useState({...educationField})
     const [experienceInp,setExperienceInp]=useState({...EXPERIENCE_VALUE})
-    const [experiences,setExperiences]=useState([])
-    const [education,setEducation]=useState([])
+    const [experiences,setExperiences]=useState(userInfo[0].experience||[])
+    const [education,setEducation]=useState(userInfo[0].education||[])
 
     let coverImg=useRef()
     let profileImg=useRef()
@@ -35,12 +35,12 @@ const EditProfile = () => {
         gender:userInfo[0].gender || ''
     }
     const [inp,setInp]=useState({...INITIAL_VALUE})
-    const [skills,setSkills]=useState([])
+    const [skills,setSkills]=useState(userInfo[0].skills ||[])
     const [newSkills,newSetSkills]=useState('')
     // state for img
-const [coverPhoto,setCoverPhoto]=useState(null)
+const [coverPhoto,setCoverPhoto]=useState(userInfo[0]?.coverImg||null)
 const [backendImg,setBackendImg]=useState(null)
-const [profilePhoto,setProfilePhoto]=useState(null)
+const [profilePhoto,setProfilePhoto]=useState(userInfo[0]?.profileImg||null)
 const [backendCoverImg,setBackendCoverImg]=useState(null)
 const dispatch = useDispatch()
     //  handleIsEdit

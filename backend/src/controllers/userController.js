@@ -18,7 +18,7 @@ const getUserController=async(req,res)=>{
 // update user profile controller 
  const updateUserProfileController=async(req,res)=>{
     try {
-        const {firstName,lastName,userName,email,headline,gender}=req.body
+        const {firstName,lastName,userName,email,headline,gender,location}=req.body
         let skills=req.body.skills?JSON.parse(req.body.skills): []
         let education=req.body.education?JSON.parse(req.body.education) : []
         let experience = req.body.experience?JSON.parse(req.body.experience):[]
@@ -43,6 +43,7 @@ const getUserController=async(req,res)=>{
             education,
             experience,
             gender,
+            location,
             profileImg,
             coverImg
     },{new:true}).select('-password')
