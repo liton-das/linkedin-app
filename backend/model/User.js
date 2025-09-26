@@ -27,6 +27,9 @@ const userSchema = new Schema({
         type:String,
         default:''
     },
+    headline:{
+        type:String
+    },
     coverImg:{
         type:String,
         default:''

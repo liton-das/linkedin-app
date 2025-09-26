@@ -1,10 +1,11 @@
 import React, { useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-import { isEdit } from '../redux/features/userSlice';
+import { addUserInfo, isEdit } from '../redux/features/userSlice';
 import { MdClose } from "react-icons/md";
 import Inputs from './form-groupComponents/Inputs';
 import ButtonComponent from './ButtonComponent';
 import { CiCamera } from 'react-icons/ci';
+import axios from 'axios'
 const educationField = {
   collage: "",
   degree: "",
@@ -38,7 +39,9 @@ const EditProfile = () => {
     const [newSkills,newSetSkills]=useState('')
     // state for img
 const [coverPhoto,setCoverPhoto]=useState(null)
+const [backendImg,setBackendImg]=useState(null)
 const [profilePhoto,setProfilePhoto]=useState(null)
+const [backendCoverImg,setBackendCoverImg]=useState(null)
 const dispatch = useDispatch()
     //  handleIsEdit
 const handleIsEdit=()=>{
@@ -55,6 +58,7 @@ const handleChange=(e)=>{
 // handleSubmit 
 const handleSubmit=(e)=>{
     e.preventDefault()
+
     
 }
 // handleskills function
@@ -101,7 +105,7 @@ const handleRemoveEducation=(educations)=>{
 // handleCoverImg
 const handleCoverImg=(e)=>{
     const getFile = e.target.files[0]
-    console.log(getFile);
+    setBackendCoverImg(getFile)
     const url = URL.createObjectURL(getFile)
     setCoverPhoto(url)
 }
@@ -109,6 +113,7 @@ const handleCoverImg=(e)=>{
 // handleProfileImg
 const handleProfileImg=(e)=>{
     const getFile=e.target.files[0]
+    setBackendImg(getFile)
     const photoUrl = URL.createObjectURL(getFile)
     setProfilePhoto(photoUrl)
 }
@@ -129,14 +134,46 @@ const handleAddExperience =()=>{
         company:company
     }
     if(experienceInp && !experiences.includes(experienceInp)){
-        setExperiences([...experiences,data])
-        setExperienceInp('')
+        setExperiences([data,...experiences])
     }
+    setExperienceInp('')
+    console.log(experiences);
+    
 }
 // handeleRemoveExperience
 const handeleRemoveExperience=(experience)=>{
     const data= experiences.filter(item=>item!=experience)
     setExperiences(data)
+}
+// handleSave userProfile img
+const handleSave = async ()=>{
+  try {
+    const {firstName,lastName,userName,headline,gender,location}=inp
+    let formData= new FormData()
+    formData.append('firstName',firstName)
+    formData.append('lastName',lastName)
+    formData.append('userName',userName)
+    formData.append('headline',headline)
+    formData.append('gender',gender)
+    formData.append('location',location)
+    formData.append('skills',JSON.stringify(skills))
+    formData.append('education',JSON.stringify(education))
+    formData.append('experience',JSON.stringify(experiences))
+    if(backendCoverImg){
+      formData.append('coverImg',backendCoverImg)
+    }
+    if(backendImg){
+      formData.append('profileImg',backendImg)
+    }
+    let result = await axios.put('http://localhost:4000/api/user/updateProfile',formData,
+      {withCredentials:true})
+    dispatch(addUserInfo(result.data.user))
+    
+  } catch (error) {
+    console.log(error);
+    
+  }
+  
 }
   return (
     <>
@@ -170,7 +207,7 @@ const handeleRemoveExperience=(experience)=>{
           <MdClose />
         </p>
         <div className="mt-14">
-          <form onSubmit={handleSubmit} className="flex flex-col">
+          <div onSubmit={handleSubmit} className="flex flex-col">
             <Inputs
               onChange={handleChange}
               text={"First Name"}
@@ -367,7 +404,8 @@ const handeleRemoveExperience=(experience)=>{
               placeholder={"add your new skills"}
             />
             <ButtonComponent onClick={handleskills} text={"Add Skills"} />
-          </form>
+            <button onClick={()=>handleSave()} className='py-[6px] px-[10px] cursor-pointer mt-5 bg-white shadow-2xl border border-slate-400 rounded-[5px] text-[#000]'>Save</button>
+          </div>
         </div>
       </div>
     </>

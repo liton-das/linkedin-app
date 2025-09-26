@@ -17,10 +17,23 @@ const LeftSideNav = () => {
       <div onClick={handleEdit} className="w-60 bg-white border border-slate-200 rounded-[5px]">
         <Profile/>
         <div className="mt-7 p-3">
-          <h1 className='mb-2'>{userInfo[0]?.firstName} {userInfo[0]?.lastName}</h1>
-          <p>MERN Stack Developer in Training | JavaScript | React | Node.js |</p>
-          <p>Doha</p>
-          <p>companay</p>
+          {
+            userInfo.map((item,i)=>(
+              <div key={i}>
+                <p className='text-slate-600 capitalize'>{item?.userName}</p>
+                <p className='text-slate-600 capitalize'>{item?.headline}</p>
+                <div className='flex gap-2 flex-wrap'>
+                  {
+                    item.skills.map((item,index)=>(
+                     
+                      <span className='text-slate-500'>{item}</span>
+                    ))
+                  }
+                </div>
+              </div>
+              
+            ))
+          }
         </div>
       </div>
     </div>

@@ -8,9 +8,11 @@ cloudinary.config({
 const uploadImg = async(filePath)=>{
     try {
         if(!filePath) return null
-        const upload = await cloudinary.uploader.upload(filePath)
+        const uploadResult = await cloudinary.uploader.upload(filePath)
+        console.log(uploadResult);
+        
         fs.unlinkSync(filePath)
-        return upload.secure_url
+        return uploadResult.secure_url
     } catch (error) {
         fs.unlinkSync(filePath)
         console.log(error);

@@ -15,6 +15,7 @@ import axios from 'axios';
 const Navbar = () => {
   const [isShow,setShow]=useState(false)
   const userInfo = useSelector((state)=>state.users)
+  
   const navigate = useNavigate()
   useEffect(()=>{
     
@@ -88,7 +89,7 @@ const Navbar = () => {
             >
               <div 
               onClick={handleShow} className="w-8 h-8 rounded-full bg-gray-500 overflow-hidden cursor-pointer">
-                <img className="w-full" src="" alt="img" />
+                <img className="w-full" src={userInfo[0]?.profileImg} alt="img" />
               </div>
               <span className="flex items-center text-[13px]">
                 {userInfo[0]?.firstName}
@@ -99,8 +100,8 @@ const Navbar = () => {
                   <div className="w-full">
                     <div className="border-b border-slate-300 py-3">
                       <div className='flex ga-4'>
-                        <div className="w-12 h-12 overflow-hidden rounded-full bg-slate-400">
-                          <img className="w-full" src="" alt="profile" />
+                        <div className="w-12 h-12 outline-2 outline-slate-500 overflow-hidden rounded-full bg-slate-400">
+                          <img className="w-full" src={userInfo[0]?.profileImg} alt="profile" />
                         </div>
                         <div className="w-3/4 flex items-center ml-2">
                           <p className="text-[13px] text-shadow-black">
